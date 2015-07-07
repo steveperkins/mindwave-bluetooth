@@ -5,6 +5,35 @@ Purpose
 ========
 mindwave-bluetooth consumes the Bluetooth serial stream from one or more [NeuroSky Mindwave Mobile EEG headsets](http://amzn.to/1c9lEeU). As a headset sends data, mindwave-bluetooth raises typed events to listeners. For example, when a headset sends a new Attention value, mindwave-bluetooth raises a new AttentionEvent containing the new value and the ID (MAC address) of the headset that sent the value.
 
+Example
+========
+    BluetoothSocket socket = new BluetoothSocket(new MindwaveEventListener() {
+		
+		  @Override
+		  public void onEvent(Event event) {
+			
+			  // Put your code here
+			  // You can check which headset generated this event with event.getDeviceAddress(), which returns the headset's Bluetooth MAC address
+			  // You can determine event type with event.getEventType()
+			  // You can cast to a specific event class to access more information
+			  if(EventType.ATTENTION.equals(event.getEventType())) {
+				  AttentionEvent attentionEvent = (AttentionEvent)event;
+				  System.out.println(attentionEvent.getValue()); // Prints the headset's Attention percentage from 0 to 100
+			  } else if(EventType.MEDITATION.equals(event.getEventType())) {
+				  MeditationEvent meditationEvent = (MeditationEvent)event;
+				  System.out.println(meditationEvent.getValue()); // Prints the headset's Meditation percentage from 0 to 100
+			  } else if(EventType.HEADSET_CONNECTED.equals(event.getEventType())) {
+			  	System.out.println("Headset connected");
+			  } else if(EventType.EIGHT_BIT_RAW_WAVE.equals(event.getEventType())) {
+				  RawEvent rawEvent = (RawEvent)event;
+				  System.out.println(rawEvent.getValues()); // rawEvent.getValues() returns an array containing an int value for each brain wave
+			  } else if(EventType.POOR_SIGNAL_QUALITY.equals(event.getEventType())) {
+				  System.out.println("Headset signal is too degraded to read"); // This event is fired when the headset connection to the user's forehead/ear is too nondeterministic to adequately calculate EEG and Attention/Meditation values
+			  }
+			
+		  }
+	  });
+
 Why would you create a project like this?
 ======
 At this time, the NeuroSky ThinkGear Connector Windows service does not provide a way to identify which headset produced data. If you have multiple headsets, you can't figure out which one produced a specific value. I needed to connect four Mindwave Mobile headsets to one Bluetooth receiver and show EEG data specific to each headset. mindwave-bluetooth is the result - a Bluetooth stream parser that allows any number of listeners to receive headset-specific events.
