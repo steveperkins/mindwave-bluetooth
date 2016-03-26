@@ -38,7 +38,7 @@ Why would you create a project like this?
 ======
 At this time, the NeuroSky ThinkGear Connector Windows service does not provide a way to identify which headset produced data. If you have multiple headsets, you can't figure out which one produced a specific value. I needed to connect four Mindwave Mobile headsets to one Bluetooth receiver and show EEG data specific to each headset. mindwave-bluetooth is the result - a Bluetooth stream parser that allows any number of listeners to receive headset-specific events.
 
-See [http://blog.steveperkins.info/index.php/blog/2015/05/hacking-the-mindwave-mobile-bluetooth-stream](http://blog.steveperkins.info/index.php/blog/2015/05/hacking-the-mindwave-mobile-bluetooth-stream) for more info.
+See [http://steveperkins.info/projects.html](http://steveperkins.info/projects.html) for more info.
 
 What events does mindwave-bluetooth raise?
 ======
