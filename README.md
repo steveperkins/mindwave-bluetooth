@@ -59,3 +59,7 @@ With four Mindwave Mobile headsets connected and actively streaming, the perform
 I want to use the Mindwave Mobile and mindwave-bluetooth on Android. Will it work?
 =====
 Yep. I wrote an Android consumer with mindwave-bluetooth and it showed the same performance as the desktop consumer. NeuroSky now offers an Android-specific SDK (iOS and Mac OS are no longer left out either) you might check out as well. Either way, the one-second resolution appears to be a limitation of the data each Mindwave Mobile is sending rather than the speed of the connection or the code used to read the connection, so if performance is your interest, a library that reads the stream directly will probably be very slightly faster than anything else.
+
+License
+====
+This project's license is copyleft non-commercial with attribution, so as long as you're not selling a product that uses the library and you attribute the use of the library back to the GitHub repo or me personally (http://steveperkins.info), you have a perpetual license to use it.
