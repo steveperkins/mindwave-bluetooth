@@ -39,6 +39,10 @@ public class BluetoothSocket  {
 		getListeners().add(listener);
 	}
 	
+	public void removeListener(MindwaveEventListener listener) {
+		getListeners().remove(listener);
+	}
+	
 	protected List<MindwaveEventListener> getListeners() {
 		return listeners;
 	}
@@ -58,6 +62,12 @@ public class BluetoothSocket  {
 		}
 	}
 
+	/**
+	 * Attempts to connect all previously-paired headsets in range
+	 * @throws IOException if a transport error occurs while attempting to establish a Bluetooth connection 
+	 * @throws InterruptedException
+	 * @throws NullPointerException if there are no previously-paired headsets in range
+	 */
 	public void start() throws IOException, InterruptedException {
 		connections = BluetoothConnector.getConnections();
 		if(null == connections || connections.isEmpty()) {
@@ -66,6 +76,10 @@ public class BluetoothSocket  {
 		startStreaming();
 	}
 
+	/**
+	 * Attempts to disconnect from all connected headsets. If a connection can't be closed normally, 
+	 * it is left to hang.
+	 */
 	public void stop() {
 		LOG.debug("Stopping Bluetooth socket!");
 		if (running) {
@@ -87,14 +101,72 @@ public class BluetoothSocket  {
 		running = false;
 	}
 
+	/**
+	 * @return all connections that have been established with headsets. Note that this is not the same thing as "connected" headsets;
+	 * it's possible for a headset to disconnect but leave the connection hanging for a short while before a timeout ends the session.
+	 * This method returns a list copy of the established connections.
+	 */
+	public List<BluetoothConnection> getConnections() {
+		List<BluetoothConnection> list = new ArrayList<>();
+		list.addAll(connections);
+		return list;
+	}
+	
+	public BluetoothConnection getConnectionByHeadsetId(String headsetId) {
+		List<BluetoothConnection> connections = getConnections();
+		for(BluetoothConnection connection: connections) {
+			if(headsetId.equals(connection.getDeviceAddress())) return connection;
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * Attempts to disconnect the given <code>headsetId</code>. If the headset is not
+	 * connected or an exception occurs while disconnecting, this implementation will 
+	 * swallow it. 
+	 * @param headsetId the headset ID to disconnect
+	 */
+	public void stop(String headsetId) {
+		BluetoothConnection connection = getConnectionByHeadsetId(headsetId);
+		if(null != connection) {
+			try {
+				BluetoothConnector.disconnect(connection);
+			} catch (IOException e) {
+				LOG.error("Could not disconnect headset ID " + headsetId, e);
+			}
+		}
+	}
+	
+	public void start(String headsetId) {
+		BluetoothConnection connection = null;
+		List<BluetoothConnection> connections = getConnections();
+		for(BluetoothConnection conn: connections) {
+			if(headsetId.equals(conn.getDeviceAddress())) {
+				connection = conn;
+				break;
+			}
+		}
+		
+		if(null != connection) {
+			start(connection);
+		}
+	}
+	
+	public BluetoothStreamParseThread start(BluetoothConnection connection) {
+		if(null == connection) throw new NullPointerException("connection cannot be null");
+		BluetoothStreamParseThread t = new BluetoothStreamParseThread(connection);
+		t.start();
+		streamThreads.add(t);
+		return t;
+	}
+	
 	private void startStreaming() {
 		if (null != connections && !connections.isEmpty()) {
 			// Connect a packet parser to each device
 			streamThreads = new ArrayList<BluetoothStreamParseThread>();
 			for(BluetoothConnection connection: connections) {
-				BluetoothStreamParseThread t = new BluetoothStreamParseThread(connection);
-				t.start();
-				streamThreads.add(t);
+				start(connection);
 			}
 		} else {
 			LOG.debug("Stopping data stream thread");

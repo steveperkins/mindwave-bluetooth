@@ -47,6 +47,10 @@ public class BluetoothConnector  {
 		return bluetoothAdapter;
 	}
 	
+	public static BluetoothConnector getInstance() {
+		return INSTANCE;
+	}
+	
 	/**
 	 * Establishes connections to all Mindwave devices paired and in range. Returns the Bluetooth address and input stream for each device.
 	 * 
@@ -130,8 +134,8 @@ public class BluetoothConnector  {
 	private int port = 1;
 	public BluetoothConnection connect(String deviceAddress) throws IOException {
 		String uri = "btspp://" + deviceAddress + ":" + (port++) + ";authenticate=false;encrypt=false;master=true;";
-		DataInputStream inputStream = Connector.openDataInputStream( uri);
-		DataOutputStream outputStream = Connector.openDataOutputStream( uri);
+		DataInputStream inputStream = Connector.openDataInputStream(uri);
+		DataOutputStream outputStream = Connector.openDataOutputStream(uri);
 		
 		// Update existing connection if one exists
 		BluetoothConnection connection = new BluetoothConnection(deviceAddress, inputStream);

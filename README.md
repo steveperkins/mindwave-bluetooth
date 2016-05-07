@@ -7,7 +7,8 @@ mindwave-bluetooth consumes the Bluetooth serial stream from one or more [NeuroS
 
 Example
 ========
-    BluetoothSocket socket = new BluetoothSocket(new MindwaveEventListener() {
+```java
+BluetoothSocket socket = new BluetoothSocket(new MindwaveEventListener() {
 		
 		  @Override
 		  public void onEvent(Event event) {
@@ -32,7 +33,27 @@ Example
 			  }
 			
 		  }
-	  });
+	  }).start();
+```
+
+You can also use helper methods to manage headset connections in a more granular way:
+```java
+BluetoothSocket socket = new BluetoothSocket();
+socket.addListener(...);
+socket.start(); // attempts to connect to all previously-paired headsets in range, begins streaming data, and begins raising data events for all headsets
+socket.start("091A2B3C4D5E"); // attempts to connect to the headset with the MAC address 091A2B3C4D5E
+socket.stop("091A2B3C4D5E"); // disconnects from the headset with the MAC address 091A2B3C4D5E
+socket.stop(); // disconnects from all connected headsets
+socket.getConnectionByHeadsetId("091A2B3C4D5E"); // tries to find an established connection for the MAC address 091A2B3C4D5E. If found, returns a BluetoothConnection object that gets you access to the raw input and output streams for this headset.
+``` 
+	
+Dependencies
+======
+mindwave-bluetooth requires a Bluetooth driver to connect to Bluetooth devices. The most stable Java driver I could find was BlueCove, which hasn't been maintained for a long time but purportedly chooses the platform-appropriate Bluetooth stack automatically. Although you can theoretically use any standard Bluetooth driver you want, the BlueCove jars are provided for you in the lib folder:
+- bluecove-2.1.1-SNAPSHOT.jar
+- bluecove-bluez-2.1.1-SNAPSHOT.jar
+- bluecove-gpl-2.1.1-SNAPSHOT.jar
+
 
 Why would you create a project like this?
 ======
