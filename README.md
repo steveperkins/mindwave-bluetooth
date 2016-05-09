@@ -54,6 +54,14 @@ mindwave-bluetooth requires a Bluetooth driver to connect to Bluetooth devices. 
 - bluecove-bluez-2.1.1-SNAPSHOT.jar
 - bluecove-gpl-2.1.1-SNAPSHOT.jar
 
+What Bluetooth adapters can I use with the NeuroSky Mindwave headsets?
+======
+After trying out a bunch of external dongles purchased for that purpose, and others from past projects, I found the most stable connection to be from my MacBook Pro's internal Bluetooth receiver.
+
+In case you'd rather not go into hock just to buy a computer to connect to the headsets, NeuroSky suggests these USB adapters (http://support.neurosky.com/kb/store/where-can-i-purchase-a-bluetooth-dongle):
+IOGEAR GBU521, $12 (http://www.amazon.com/IOGEAR-Bluetooth-Micro-Adapter-GBU521/dp/B007GFX0PY)
+The drivers are available from the IOGEAR website but are 139MB, 200MB, and 235MB (ouch! https://www.iogear.com/support/dm/driver/GBU521#display). Windows may already have a compatible driver that's not enormous.
+
 
 Why would you create a project like this?
 ======
