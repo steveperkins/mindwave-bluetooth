@@ -91,4 +91,4 @@ Yep. I wrote an Android consumer with mindwave-bluetooth and it showed the same 
 
 License
 ====
-This project's license is copyleft non-commercial with attribution, so as long as you're not selling a product that uses the library and you attribute the use of the library back to the GitHub repo or me personally (http://steveperkins.info), you have a perpetual license to use it.
+This project's license is non-commercial with attribution, so as long as you're not selling a product that uses the library and you attribute the use of the library back to the GitHub repo or me personally (http://steveperkins.info), you have a perpetual license to use it.
